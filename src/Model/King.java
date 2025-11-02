@@ -1,21 +1,10 @@
-package Pieces;
-
-import Game.Board;
-import UtilityClasses.*;
+package Model;
 
 import java.util.ArrayList;
 
 public class King extends Piece{
-    public final char symbol = 'K';
 
-    public King(Color color, Position position){
-        super(color, position);
-    }
-
-    @Override
-    public char getSymbol(){
-        return symbol;
-    }
+    public King(boolean isWhite) {super(isWhite);}
 
     @Override
     public ArrayList<Position> possibleMoves(Board board) {

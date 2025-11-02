@@ -1,21 +1,10 @@
-package Pieces;
-
-import Game.Board;
-import UtilityClasses.*;
+package Model;
 
 import java.util.ArrayList;
 
 public class Queen extends Piece{
-    public final char symbol = 'Q';
 
-    public Queen(Color color, Position position){
-        super(color, position);
-    }
-
-    @Override
-    public char getSymbol(){
-        return symbol;
-    }
+    public Queen(boolean isWhite ) {super(isWhite);}
 
     @Override
     public ArrayList<Position> possibleMoves(Board board){

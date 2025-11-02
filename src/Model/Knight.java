@@ -1,20 +1,11 @@
-package Pieces;
-
-import Game.Board;
-import UtilityClasses.*;
+package Model;
 
 import java.util.ArrayList;
 
 public class Knight extends Piece{
-    public final char symbol = 'N';
 
-    public  Knight(Color color, Position position){
-        super(color, position);
-    }
-
-    @Override
-    public char getSymbol(){
-        return symbol;
+    public  Knight(boolean isWhite){
+        super(isWhite);
     }
 
     @Override

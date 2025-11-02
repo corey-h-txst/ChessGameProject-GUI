@@ -1,21 +1,10 @@
-package Pieces;
-
-import Game.Board;
-import UtilityClasses.*;
+package Model;
 
 import java.util.ArrayList;
 
 public class Bishop extends Piece {
-    public final char symbol = 'B';
 
-    public Bishop(Color color, Position position){
-        super(color, position);
-    }
-
-    @Override
-    public char getSymbol(){
-        return symbol;
-    }
+    public Bishop(boolean isWhite){super(isWhite);}
 
     @Override
     public ArrayList<Position> possibleMoves(Board board) {

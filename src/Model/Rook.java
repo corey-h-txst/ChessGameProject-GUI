@@ -1,21 +1,10 @@
-package Pieces;
-
-import Game.Board;
-import UtilityClasses.*;
+package Model;
 
 import java.util.ArrayList;
 
 public class Rook extends Piece{
-    public final char symbol = 'R';
 
-    public Rook(Color color, Position position){
-        super(color, position);
-    }
-
-    @Override
-    public char getSymbol(){
-        return symbol;
-    }
+    public Rook(boolean isWhite) {super(isWhite);}
 
     @Override
     public ArrayList<Position> possibleMoves(Board board){
