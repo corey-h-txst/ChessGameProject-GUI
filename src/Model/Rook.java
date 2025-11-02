@@ -7,58 +7,35 @@ public class Rook extends Piece{
     public Rook(boolean isWhite) {super(isWhite);}
 
     @Override
-    public ArrayList<Position> possibleMoves(Board board){
+    public ArrayList<Position> possibleMoves(ArrayList<ArrayList<Piece>> board, Position pos) {
         ArrayList<Position> possibleMoves = new ArrayList<>();
-        Position possible = new Position(position.row, position.col);
+        int row = pos.row;
+        int col = pos.col;
 
-        // Check move down
-        while (true){
-            possible.row++;
-            if (!board.isValidPosition(possible)) break;
-            if (board.getPiece(possible) != null){
-                if (board.getPiece(possible).getColor() != color.color) possibleMoves.add(new Position(possible.row, possible.col));
-                break;
-            }
-            possibleMoves.add(new Position(possible.row, possible.col));
-        }
-        possible.row = this.position.row;
-        possible.col = this.position.col;
+        // Defines up, down, left, and right movement
+        int[][] rookMoves = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
-        // Check move right
-        while (true){
-            possible.col++;
-            if(!board.isValidPosition(possible)) break;
-            if (board.getPiece(possible) != null){
-                if (board.getPiece(possible).getColor() != color.color) possibleMoves.add(new Position(possible.row, possible.col));
-                break;
-            }
-            possibleMoves.add(new Position(possible.row, possible.col));
-        }
-        possible.row = this.position.row;
-        possible.col = this.position.col;
+        for(int[] direction : rookMoves){
+            int newRow = row + direction[0];
+            int newCol = col + direction[1];
 
-        // Check move up
-        while (true){
-            possible.row--;
-            if(!board.isValidPosition(possible)) break;
-            if (board.getPiece(possible) != null){
-                if (board.getPiece(possible).getColor() != color.color)possibleMoves.add(new Position(possible.row, possible.col));
-                break;
+            while (isInBounds(newRow, newCol)) {
+                Piece target = board.get(newRow).get(newCol);
+                // Empty square check
+                if (target == null){
+                    possibleMoves.add(new Position(newRow,newCol));
+                }
+                // Occupied square check
+                else{
+                    if(target.isWhite != this.isWhite){
+                        possibleMoves.add(new Position(newRow,newCol));
+                    }
+                    break;
+                }
+                // Extend movement in direction if square is not occupied or out of bounds
+                newRow = newRow + direction[0];
+                newCol = newCol + direction[1];
             }
-            possibleMoves.add(new Position(possible.row, possible.col));
-        }
-        possible.row = this.position.row;
-        possible.col = this.position.col;
-
-        // Check move left
-        while (true){
-            possible.col--;
-            if(!board.isValidPosition(possible)) break;
-            if (board.getPiece(possible) != null){
-                if (board.getPiece(possible).getColor() != color.color)possibleMoves.add(new Position(possible.row, possible.col));
-                break;
-            }
-            possibleMoves.add(new Position(possible.row, possible.col));
         }
 
         return possibleMoves;

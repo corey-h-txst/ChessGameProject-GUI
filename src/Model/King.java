@@ -7,9 +7,12 @@ public class King extends Piece{
     public King(boolean isWhite) {super(isWhite);}
 
     @Override
-    public ArrayList<Position> possibleMoves(Board board) {
+    public ArrayList<Position> possibleMoves(ArrayList<ArrayList<Piece>> board, Position pos) {
         ArrayList<Position> possibleMoves = new ArrayList<>();
-        Position possible = new Position(0, 0);
+        int row = pos.row;
+        int col = pos.col;
+
+        // Defines all possible move for king
         int[][] kingMoves = {
                 {-1, -1}, {-1, 0}, {-1, 1},
                 {0, -1},           {0, 1},
@@ -17,14 +20,13 @@ public class King extends Piece{
         };
 
         for(int[] move : kingMoves){
-            int row = position.row + move[0];
-            int col = position.col + move[1];
-            possible.row = row;
-            possible.col = col;
+            int newRow = row + move[0];
+            int newCol = col + move[1];
 
-            if (board.isValidPosition(possible)) {
-                Piece target = board.getPiece(possible);
-                if(target == null || target.getColor() != color.color) possibleMoves.add(new Position(row, col));
+            // Checks if possible move has an occupied space and is in bounds
+            if (isInBounds(newRow, newCol)) {
+                Piece target = board.get(newRow).get(newCol);
+                if(target == null || target.isWhite != this.isWhite) possibleMoves.add(new Position(newRow, newCol));
             }
         }
         return possibleMoves;

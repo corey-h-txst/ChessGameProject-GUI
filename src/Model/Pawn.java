@@ -8,36 +8,43 @@ public class Pawn extends Piece{
         super(isWhite);
     }
 
-
     @Override
-    public ArrayList<Position> possibleMoves(Board board){
+    public ArrayList<Position> possibleMoves(ArrayList<ArrayList<Piece>> board, Position pos){
         ArrayList<Position> possibleMoves = new ArrayList<>();
         // Determines direction of pawn (white upwards, black downwards)
         int direction = (isWhite) ? -1 : 1;
 
-        Position forward = new Position(position.row + direction, position.col);
-        if (board.isValidPosition(forward) && board.getPiece(forward) == null) {
-            possibleMoves.add(forward);
+        int row = pos.row;
+        int col = pos.col;
 
-            // Handles two square movement on a pawn's first move
-            int startingRow = (isWhite) ? 6 : 1;
-            if (position.row == startingRow) {
-                Position doubleForward = new Position(position.row + 2 * direction, position.col);
-                if(board.isValidPosition(doubleForward) && board.getPiece(doubleForward) == null){
-                possibleMoves.add(doubleForward);
-                }
+        // Checks forward movement of pawn
+        int newRow = row + direction;
+        if(isInBounds(newRow, col) && board.get(newRow).get(col) == null){
+            possibleMoves.add(new Position(newRow, col));
+
+            // Checks if pawn can move 2 forward
+            int startingRow = isWhite ? 6 : 1;
+            int doubleRow = row + 2 * direction;
+            if(row == startingRow && board.get(doubleRow).get(col) == null){
+                possibleMoves.add(new Position(doubleRow, col));
             }
         }
-        // Handles logic diagonal movement which requires the pawn to take a piece
-        Position takeLeft = new Position(position.row + direction, position.col - 1);
-        if (board.isValidPosition(takeLeft)){
-            Piece target = board.getPiece(takeLeft);
-            if (target != null && target.color != color) possibleMoves.add(takeLeft);
+
+        // Checks diagonal left capture movement
+        int diagonalColLeft = col - 1;
+        if(isInBounds(newRow, diagonalColLeft)){
+            Piece target =  board.get(newRow).get(diagonalColLeft);
+            if(target != null && target.isWhite != this.isWhite){
+                possibleMoves.add(new Position(newRow, diagonalColLeft));
+            }
         }
-        Position takeRight = new Position(position.row + direction, position.col - 1);
-        if (board.isValidPosition(takeRight)) {
-            Piece target = board.getPiece(takeRight);
-            if (target != null && target.color != color) possibleMoves.add(takeRight);
+        // Checks diagonal right capture movement
+        int diagonalColRight = col + 1;
+        if(isInBounds(newRow, diagonalColRight)){
+            Piece target =  board.get(newRow).get(diagonalColRight);
+            if(target != null && target.isWhite != this.isWhite){
+                possibleMoves.add(new Position(newRow, diagonalColRight));
+            }
         }
 
         return possibleMoves;

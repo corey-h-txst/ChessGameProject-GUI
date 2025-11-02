@@ -9,34 +9,26 @@ public class Knight extends Piece{
     }
 
     @Override
-    public ArrayList<Position> possibleMoves(Board board){
+    public ArrayList<Position> possibleMoves(ArrayList<ArrayList<Piece>> board, Position pos) {
         ArrayList<Position> possibleMoves = new ArrayList<>();
-        Position possible = new Position(0,0 );
-        int[][] knightMoves = {{-2, -1}, {-2, 1}, {2, -1}, {2, 1}};
+        int row = pos.row;
+        int col = pos.col;
 
-        for(int[] move : knightMoves){
-            int row = position.row + move[0];
-            int col = position.col + move[1];
-            possible.row = row;
-            possible.col = col;
-            if (board.isValidPosition(possible)){
-                Piece target = board.getPiece(possible);
-                if(target == null || target.getColor() != color.color){
-                    possibleMoves.add(new Position(row, col));
-                }
-            }
+        // Defines all possible knight moves
+        int[][] knightMoves = {{-2, -1}, {-2, 1}, {2, -1}, {2, 1}, {-1, -2}, {-1, 2}, {1, -2}, {1, 2}};
 
-            row = position.row + move[1];
-            col = position.col + move[0];
-            possible.row = row;
-            possible.col = col;
-            if (board.isValidPosition(possible)){
-                Piece target = board.getPiece(possible);
-                if(target == null || target.getColor() != color.color){
-                    possibleMoves.add(new Position(row, col));
+        for(int[] move : knightMoves) {
+            int newRow = row + move[0];
+            int newCol = col + move[1];
+
+            if (isInBounds(newRow, newCol)) {
+                Piece target = board.get(newRow).get(newCol);
+                if (target == null || target.isWhite != this.isWhite) {
+                    possibleMoves.add(new Position(newRow, newCol));
                 }
             }
         }
+
         return possibleMoves;
     }
 }

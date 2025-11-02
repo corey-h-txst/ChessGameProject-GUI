@@ -7,28 +7,35 @@ public class Bishop extends Piece {
     public Bishop(boolean isWhite){super(isWhite);}
 
     @Override
-    public ArrayList<Position> possibleMoves(Board board) {
+    public ArrayList<Position> possibleMoves(ArrayList<ArrayList<Piece>> board, Position pos) {
         ArrayList<Position> possibleMoves = new ArrayList<>();
+        int row = pos.row;
+        int col = pos.col;
+
+        // Defines diagonal movement for bishop
         int[][] bishopMoves = {{-1, -1}, {1, -1}, {-1, 1}, {1, 1}};
-        Position possible = new Position(0, 0);
 
-        for (int[] move : bishopMoves) {
-            int row = position.row + move[0];
-            int col = position.col + move[1];
+        for (int[] direction : bishopMoves) {
+            int newRow = row + direction[0];
+            int newCol = col + direction[1];
 
-            while (true){
-                possible.row = row;
-                possible.col = col;
-                if(!board.isValidPosition(possible)) break;
+            while(isInBounds(newRow, newCol)) {
+                Piece target = board.get(newRow).get(newCol);
 
-                Piece target =  board.getPiece(possible);
-                if (target != null){
-                    if (target.getColor() != color.color) possibleMoves.add(new Position(row, col));
+                // Empty square check
+                if(target == null){
+                    possibleMoves.add(new Position(newRow, newCol));
+                }
+                // Occupied square check
+                else{
+                    if(target.isWhite != this.isWhite){
+                        possibleMoves.add(new Position(newRow,newCol));
+                    }
                     break;
                 }
-                possibleMoves.add(new Position(row, col));
-                row += move[0];
-                col += move[1];
+                // Extends diagonal movement if not occupied square or out of bounds
+                newRow += direction[0];
+                newCol += direction[1];
             }
         }
 

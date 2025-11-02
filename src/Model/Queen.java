@@ -7,9 +7,12 @@ public class Queen extends Piece{
     public Queen(boolean isWhite ) {super(isWhite);}
 
     @Override
-    public ArrayList<Position> possibleMoves(Board board){
+    public ArrayList<Position> possibleMoves(ArrayList<ArrayList<Piece>> board, Position pos){
         ArrayList<Position> possibleMoves = new ArrayList<>();
-        Position possible = new Position(0,0);
+        int row = pos.row;
+        int col = pos.col;
+
+        // Defines all possible movement of queen
         int[][] queenMoves = {
                 {-1, 0}, {1, 0},
                 {0, -1}, {0, 1},
@@ -17,26 +20,30 @@ public class Queen extends Piece{
                 {1, -1}, {1, 1},
         };
 
-        for (int[]move : queenMoves){
-            int row = this.position.row + move[0];
-            int col = this.position.col + move[1];
+        for(int[] direction : queenMoves){
+            int newRow = row + direction[0];
+            int newCol = col + direction[1];
 
-            while (true){
-                possible.row = row;
-                possible.col = col;
-                if(!board.isValidPosition(possible)) break;
+            while (isInBounds(newRow, newCol)) {
+                Piece target = board.get(newRow).get(newCol);
 
-                Piece target =  board.getPiece(possible);
-                if (target != null){
-                    if (target.getColor() != color.color) possibleMoves.add(new Position(row, col));
+                // Empty square check
+                if(target == null){
+                    possibleMoves.add(new Position(newRow,newCol));
+                }
+                // Occupied square check
+                else{
+                    if(target.isWhite != isWhite){
+                        possibleMoves.add(new Position(newRow,newCol));
+                    }
                     break;
                 }
-                possibleMoves.add(new Position(row, col));
-
-                row += move[0];
-                col += move[1];
+                // Extends movement in current direction if not occupied or out of bounds
+                newRow += direction[0];
+                newCol += direction[1];
             }
         }
+
         return possibleMoves;
     }
 
