@@ -104,7 +104,7 @@ public class MoveHandler{
         Piece piece = getPieceAt(curr);
 
         ArrayList<Position> legalMoves = new ArrayList<>();
-        for (Position move : piece.possibleMoves(board)) {
+        for (Position move : piece.possibleMoves(board, curr)) {
             Piece captured = getPieceAt(move);
 
             movePiece(curr, move);
@@ -121,29 +121,29 @@ public class MoveHandler{
         return false;
     }
 
-    public boolean isCheck(Color color) {
-        // Obtains location of king
+    public boolean isCheck(boolean isWhite) {
         Position kingSquare = null;
-        for (ArrayList<Square> row : board) {
-            for (Square square : row) {
-                if (!square.piece.isEmpty()) {
-                    Piece piece = square.piece.getFirst();
-                    if (piece instanceof King && piece.color == color) {
-                        kingSquare = piece.position;
-                        break;
-                    }
+        // Finds location of king
+        for(int row = 0; row < 8; row++){
+            for(int col = 0; col < 8; col++){
+                Piece piece = board.get(row).get(col);
+                if(piece instanceof King && piece.isWhite == isWhite){
+                    kingSquare = new Position(row, col);
+                    break;
                 }
             }
         }
 
-        // Determines if king is under attack by an enemy piece
-        for (ArrayList<Square> row : board) {
-            for (Square square : row) {
-                if (!square.piece.isEmpty()) {
-                    Piece attack = square.piece.getFirst();
-                    if (attack.color != color) {
-                        ArrayList<Position> moves = attack.possibleMoves(this);
-                        if (moves.contains(kingSquare)) return true;
+        // Tests if any enemy pieces can attack king
+        for(int row = 0; row < 8; row++){
+            for(int col = 0; col < 8; col++){
+                Piece piece = board.get(row).get(col);
+                if(piece != null && piece.isWhite != isWhite){
+                    ArrayList<Position> moves = piece.possibleMoves(board, new Position(row, col));
+                    for(Position move : moves){
+                        if(move.equals(kingSquare)){
+                            return true;
+                        }
                     }
                 }
             }
@@ -151,45 +151,38 @@ public class MoveHandler{
         return false;
     }
 
-    public boolean isCheckmate(Color color) {
-        if (!isCheck(color)) {
+    public boolean isCheckmate(boolean isWhite) {
+        if (!isCheck(isWhite)) {
             return false;
         }
 
         // Tests if any friendly pieces (including king) can be moved to avoid checkmate
-        for (ArrayList<Square> row : board) {
-            for (Square square : row) {
-                if (!square.piece.isEmpty()) {
-                    Piece piece = square.piece.getFirst();
-                    if (piece.color == color) {
+        for(int row = 0; row < 8; row++){
+            for(int col = 0; col < 8; col++){
+                Piece piece = board.get(row).get(col);
+                if(piece != null && piece.isWhite != isWhite){
+                    ArrayList<Position> moves = piece.possibleMoves(board, new Position(row, col));
+                    for(Position move : moves){
+                        // Store current board state
+                        Piece captured = getPieceAt(move);
 
-                        ArrayList<Position> moves = piece.possibleMoves(this);
-                        for (Position move : moves) {
-                            Piece captured = getPiece(move);
-                            Position originalPos = piece.position;
+                        // Make move
+                        movePiece(new Position(row, col), move);
 
-                            movePiece(originalPos, move);
+                        // Check if king is still in check
+                        boolean stillCheck = isCheck(isWhite);
 
-                            if (!isCheck(color)) {
-                                board.get(originalPos.row).get(originalPos.col).piece.add(piece);
-                                piece.position = originalPos;
-                                board.get(move.row).get(move.col).piece.clear();
-                                if (captured != null) board.get(move.row).get(move.col).piece.add(captured);
+                        // Undo move
+                        board.get(row).set(col, piece);
+                        board.get(move.row).set(move.col, captured);
 
-                                System.out.println("Check!");
-                                return false;
-                            }
-
-                            board.get(originalPos.row).get(originalPos.col).piece.add(piece);
-                            piece.position = originalPos;
-                            board.get(move.row).get(move.col).piece.clear();
-                            if (captured != null) board.get(move.row).get(move.col).piece.add(captured);
+                        if(!stillCheck){
+                            return false;
                         }
                     }
                 }
             }
         }
-        System.out.println("Checkmate!");
         return true;
     }
 }
