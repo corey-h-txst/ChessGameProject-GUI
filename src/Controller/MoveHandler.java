@@ -1,7 +1,6 @@
 package Controller;
 
 import Model.*;
-import View.GUI;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -12,10 +11,8 @@ public class MoveHandler{
     private final boolean white = true;
     private final boolean black = false;
     private final ArrayList<ArrayList<Piece>> board;
-    private GUI gui;
 
-    public MoveHandler(GUI gui){
-        this.gui = gui;
+    public MoveHandler(){
         this.board = new ArrayList<ArrayList<Piece>>();
 
         ArrayList<Piece> currRow = new ArrayList<>(8);
@@ -87,7 +84,7 @@ public class MoveHandler{
     }
 
     // Return the piece at any given position
-    private Piece getPieceAt(Position pos){
+    public Piece getPieceAt(Position pos){
         if(board.get(pos.row).get(pos.col) == null){}
         return null;
     }
