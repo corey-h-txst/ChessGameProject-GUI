@@ -1,27 +1,28 @@
 package Controller;
 
 import Model.*;
+import View.GUI;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class MoveHandler{
-    private boolean isWhiteTurn;
-    private Position selectedPos;
+    private GUI gui;
+    private boolean isWhiteTurn = true;
+    private Position selectedPos = null;
     private final boolean white = true;
     private final boolean black = false;
     private final ArrayList<ArrayList<Piece>> board;
 
-    public MoveHandler(){
-        this.board = new ArrayList<ArrayList<Piece>>();
-
-        ArrayList<Piece> currRow = new ArrayList<>(8);
+    public MoveHandler(GUI gui){
+        this.gui = gui;
+        this.board = new ArrayList<>();
 
         // Creates king and pawn rows for black
         board.add(createKingRow(black));
         board.add(createPawnRow(black));
         // Adds empty rows
-        for(int i = 0; i < 6; i++){
+        for(int i = 0; i < 4; i++){
             board.add(createEmptyRow());
         }
         // Creates king and pawn rows for white
@@ -63,12 +64,8 @@ public class MoveHandler{
         // Gets selectedPos from handleClick's arguments
         if (selectedPos == null) {
             Piece piece = getPieceAt(clicked);
-            // Checks if a piece is at position
-            if(piece == null){
-                return;
-            }
-            // Checks if piece is of same color as current player turn
-            if(piece.isWhite != isWhiteTurn){
+            // Checks if a piece is at position or if piece is player's color and return if not
+            if(piece == null || piece.isWhite != isWhiteTurn){
                 return;
             }
             // If clicked position is valid set selectedPos to clicked
@@ -80,12 +77,13 @@ public class MoveHandler{
                 isWhiteTurn = !isWhiteTurn;
             }
             selectedPos = null;
+            gui.updateBoardGUI();
         }
     }
 
     // Return the piece at any given position
     public Piece getPieceAt(Position pos){
-        if(board.get(pos.row).get(pos.col) == null){}
+        if(board.get(pos.row).get(pos.col) != null){return board.get(pos.row).get(pos.col);}
         return null;
     }
 

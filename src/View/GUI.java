@@ -4,17 +4,20 @@ import Controller.MoveHandler;
 import Model.*;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.*;
 
 public class GUI extends JFrame {
     private JButton[][] boardButtons = new JButton[8][8];
     private JPanel boardPanel;
     private JPanel sidePanel;
-    private MoveHandler moveHandler;
+    public  MoveHandler moveHandler;
+    private Map<String, ImageIcon> pieceIcons = new HashMap<String, ImageIcon>();
+    private Position highlightedPos;
 
     public GUI() {
-        moveHandler = new MoveHandler();
+        moveHandler = new MoveHandler(this);
 
         setTitle("Java Chess Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,6 +29,8 @@ public class GUI extends JFrame {
 
         add(boardPanel, BorderLayout.CENTER);
         add(sidePanel, BorderLayout.EAST);
+        loadPieceIcons();
+        updateBoardGUI();
 
         setVisible(true);
     }
@@ -43,7 +48,7 @@ public class GUI extends JFrame {
                     button.setBackground(Color.WHITE);
                 }
                 else {
-                    button.setBackground(Color.BLACK);
+                    button.setBackground(Color.DARK_GRAY);
                 }
 
                 // Stored for lambda expression
@@ -74,6 +79,18 @@ public class GUI extends JFrame {
         return sidePanel;
     }
 
+    private void loadPieceIcons() {
+        String[] colors = {"white", "black"};
+        String[] pieces = {"pawn", "knight", "bishop", "rook", "queen", "king"};
+
+        for(String color : colors) {
+            for(String piece : pieces) {
+                String path = "Resources/" + color + "_" + piece + ".png";
+                pieceIcons.put(color + "_" + piece, new ImageIcon(path));
+            }
+        }
+    }
+
     public void updateBoardGUI(){
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
@@ -84,16 +101,13 @@ public class GUI extends JFrame {
                     button.setIcon(null);
                 }
                 else{
-                    String symbol = "";
-                    if(piece instanceof Pawn) symbol = piece.isWhite ? "\u2659" : "\u265F";
-                    else if(piece instanceof Knight) symbol = piece.isWhite ? "\u2656" : "\u265C";
-                    else if(piece instanceof Rook) symbol = piece.isWhite ? "\u2658" : "\u265E";
-                    else if(piece instanceof Bishop) symbol = piece.isWhite ? "\u2657" : "\u265D";
-                    else if(piece instanceof Queen) symbol = piece.isWhite ? "\u2655" : "\u265B";
-                    else if(piece instanceof King) symbol = piece.isWhite ? "\u2654" : "\u265A";
+                    String key = (piece.isWhite ? "white_" : "black_") + piece.getClass().getSimpleName().toLowerCase();
+                    ImageIcon icon = pieceIcons.get(key);
+                    button.setIcon(icon);
                 }
             }
         }
+        boardPanel.revalidate();
+        boardPanel.repaint();
     }
-    
 }
