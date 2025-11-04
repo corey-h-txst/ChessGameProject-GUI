@@ -12,9 +12,10 @@ public class GUI extends JFrame {
     private JButton[][] boardButtons = new JButton[8][8];
     private JPanel boardPanel;
     private JPanel sidePanel;
+    private JScrollPane logPanel;
+    private JTextArea logText;
     public  MoveHandler moveHandler;
     private Map<String, ImageIcon> pieceIcons = new HashMap<String, ImageIcon>();
-    private Position highlightedPos;
 
     public GUI() {
         moveHandler = new MoveHandler(this);
@@ -26,9 +27,11 @@ public class GUI extends JFrame {
 
         boardPanel = createBoardPanel();
         sidePanel = createSidePanel();
+        logPanel = createLogPanel();
 
         add(boardPanel, BorderLayout.CENTER);
         add(sidePanel, BorderLayout.EAST);
+        add(logPanel, BorderLayout.SOUTH);
         loadPieceIcons();
         updateBoardGUI();
 
@@ -66,17 +69,30 @@ public class GUI extends JFrame {
     private JPanel createSidePanel() {
         JPanel sidePanel = new JPanel(new GridLayout(4, 1));
 
-        JButton settingsButton = new JButton("Settings");
         JButton startButton = new JButton("New Game");
         JButton loadButton = new JButton("Load Game");
         JButton saveButton = new JButton("Save Game");
+        JButton undoButton = new JButton("Undo Move");
 
-        sidePanel.add(settingsButton);
         sidePanel.add(startButton);
         sidePanel.add(loadButton);
         sidePanel.add(saveButton);
+        sidePanel.add(undoButton);
 
         return sidePanel;
+    }
+
+    private JScrollPane createLogPanel() {
+        logText = new JTextArea();
+        logText.setEditable(false);
+        JScrollPane logPane = new JScrollPane(logText);
+        logPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        logPane.setPreferredSize(new Dimension(800, 125));
+        return logPane;
+    }
+
+    public void outputLog(String text) {
+        logText.append(text);
     }
 
     private void loadPieceIcons() {
