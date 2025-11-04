@@ -22,6 +22,7 @@ public class MoveLog {
     // Removes the last added move from moves list
     public void removeLastMove() {
         moves.removeLast();
+        // Add logic to undo last move as well
     }
     // Clears the entire moves list (only used when loading save file or reseting board)
     public void clearLog(){

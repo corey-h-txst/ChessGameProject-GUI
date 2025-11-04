@@ -1,9 +1,12 @@
 package View;
 
+import Controller.GameController;
 import Controller.MoveHandler;
 import Model.*;
 
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
@@ -15,6 +18,7 @@ public class GUI extends JFrame {
     private JScrollPane logPanel;
     public JTextArea logText;
     public  MoveHandler moveHandler;
+    private GameController game;
     private Map<String, ImageIcon> pieceIcons = new HashMap<String, ImageIcon>();
 
     public GUI() {
@@ -69,12 +73,74 @@ public class GUI extends JFrame {
     private JPanel createSidePanel() {
         JPanel sidePanel = new JPanel(new GridLayout(4, 1));
 
-        JButton startButton = new JButton("New Game");
+        JButton newButton = new JButton("New Game");
         JButton loadButton = new JButton("Load Game");
         JButton saveButton = new JButton("Save Game");
         JButton undoButton = new JButton("Undo Move");
 
-        sidePanel.add(startButton);
+        newButton.addActionListener(e -> game.newGame());
+        loadButton.addActionListener(e -> {
+            File saveDirectory = new File("SaveFiles");
+            File[] files = saveDirectory.listFiles();
+
+            final File[] selectedFile = {null};
+
+            JDialog dialog = new JDialog(this, "Load Game", true);
+            dialog.setSize(300, 400);
+            dialog.setLayout(new BorderLayout());
+            dialog.setLocationRelativeTo(this);
+
+            JLabel label = new JLabel("Select a save file:");
+            dialog.add(label, BorderLayout.NORTH);
+
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+            for(File file : files) {
+                JButton button = new JButton(file.getName());
+                button.addActionListener(e1 -> {
+                    selectedFile[0] = file;
+                    dialog.dispose();
+                });
+            }
+
+            dialog.setVisible(true);
+
+            try {
+                game.loadGame(files[0].getName());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        saveButton.addActionListener(e -> {
+            JDialog dialog = new JDialog(this, "Save Game", true);
+            dialog.setSize(300, 100);
+            dialog.setLocationRelativeTo(this);
+
+            JLabel label = new JLabel("Enter Save File Name:");
+            dialog.add(label, BorderLayout.NORTH);
+
+            JTextField text = new JTextField();
+            dialog.add(text, BorderLayout.CENTER);
+
+            final String[] fileName = {null};
+
+            text.addActionListener(e2 -> {
+                fileName[0] = text.getText().trim();
+                dialog.dispose();
+            });
+
+            dialog.setVisible(true);
+
+            try {
+                game.saveGame(fileName[0]);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        undoButton.addActionListener(e -> game.gameLog.removeLastMove());
+
+        sidePanel.add(newButton);
         sidePanel.add(loadButton);
         sidePanel.add(saveButton);
         sidePanel.add(undoButton);

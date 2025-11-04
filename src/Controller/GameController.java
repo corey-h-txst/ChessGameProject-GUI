@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class GameController {
-    private final MoveLog gameLog;
+    public final MoveLog gameLog;
     private final GUI gui;
     private final MoveHandler game;
 
