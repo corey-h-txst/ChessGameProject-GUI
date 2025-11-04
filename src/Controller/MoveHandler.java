@@ -97,6 +97,11 @@ public class MoveHandler{
         return null;
     }
 
+    // Sets piece to given position (used by undo move to restore pieces)
+    public void setPieceAt(Position pos, Piece piece){
+        board.get(pos.row).set(pos.col, piece);
+    }
+
     // Moves piece to target and sets original position to null
     public void movePiece(Position from, Position to){
         Piece piece = getPieceAt(from);
