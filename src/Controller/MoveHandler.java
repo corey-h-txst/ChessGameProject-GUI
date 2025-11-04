@@ -30,6 +30,16 @@ public class MoveHandler{
         board.add(createKingRow(white));
     }
 
+    public void resetBoard(){
+        board.set(0, createKingRow(black));
+        board.set(1, createPawnRow(black));
+        for(int i = 2; i < 6; i++){
+            board.set(0, createEmptyRow());
+        }
+        board.set(6, createPawnRow(white));
+        board.set(7, createKingRow(white));
+    }
+
     private ArrayList<Piece> createPawnRow(boolean color){
         ArrayList<Piece> currRow = new ArrayList<>(8);
         for (int i = 0; i < 8; i++) {
@@ -88,7 +98,7 @@ public class MoveHandler{
     }
 
     // Moves piece to target and sets original position to null
-    private void movePiece(Position from, Position to){
+    public void movePiece(Position from, Position to){
         Piece piece = getPieceAt(from);
         board.get(from.row).set(from.col, null);
         board.get(to.row).set(to.col, piece);

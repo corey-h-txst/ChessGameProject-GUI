@@ -13,7 +13,7 @@ public class GUI extends JFrame {
     private JPanel boardPanel;
     private JPanel sidePanel;
     private JScrollPane logPanel;
-    private JTextArea logText;
+    public JTextArea logText;
     public  MoveHandler moveHandler;
     private Map<String, ImageIcon> pieceIcons = new HashMap<String, ImageIcon>();
 
