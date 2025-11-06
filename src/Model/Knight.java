@@ -14,6 +14,7 @@ public class Knight extends Piece{
     }
 
     @Override
+    // Returns all possible moves for the Knight piece
     public ArrayList<Position> possibleMoves(ArrayList<ArrayList<Piece>> board, Position pos) {
         ArrayList<Position> possibleMoves = new ArrayList<>();
         int row = pos.row;
@@ -26,6 +27,7 @@ public class Knight extends Piece{
             int newRow = row + move[0];
             int newCol = col + move[1];
 
+            // Checks if possible move is in bounds and if it is occupied
             if (isInBounds(newRow, newCol)) {
                 Piece target = board.get(newRow).get(newCol);
                 if (target == null || target.isWhite != this.isWhite) {

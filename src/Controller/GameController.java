@@ -22,6 +22,7 @@ public class GameController {
         game.resetBoard();
         gameLog.clearLog();
         gui.logText.setText("");
+        game.isWhiteTurn = true;
         gui.updateBoardGUI();
     }
     // Takes a file name from GUI and saves the current log to a file in SaveFiles directory

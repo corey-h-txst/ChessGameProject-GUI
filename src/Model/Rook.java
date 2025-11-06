@@ -24,6 +24,7 @@ public class Rook extends Piece{
             int newRow = row + direction[0];
             int newCol = col + direction[1];
 
+            // Checks if move is in bounds
             while (isInBounds(newRow, newCol)) {
                 Piece target = board.get(newRow).get(newCol);
                 // Empty square check

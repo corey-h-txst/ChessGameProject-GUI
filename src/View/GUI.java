@@ -5,8 +5,6 @@ import Controller.MoveHandler;
 import Model.*;
 
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,6 +21,7 @@ public class GUI extends JFrame {
     public GameController game;
     private Map<String, ImageIcon> pieceIcons = new HashMap<String, ImageIcon>();
 
+    // Default constructor
     public GUI() {
         moveHandler = new MoveHandler(this);
         game = new GameController(this, moveHandler);
@@ -45,9 +44,11 @@ public class GUI extends JFrame {
         setVisible(true);
     }
 
+    // Creates the board part of the GUI
     private JPanel createBoardPanel() {
         JPanel boardPanel = new JPanel(new GridLayout(8, 8));
 
+        // Initializes board buttons and sets checkerboard pattern
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 JButton button = new JButton();
@@ -73,6 +74,7 @@ public class GUI extends JFrame {
         }
         return boardPanel;
     }
+    // Creates side panel which include New, Load, and Save Game as well as Undo Move
     private JPanel createSidePanel() {
         JPanel sidePanel = new JPanel(new GridLayout(4, 1));
 
@@ -81,12 +83,15 @@ public class GUI extends JFrame {
         JButton saveButton = new JButton("Save Game");
         JButton undoButton = new JButton("Undo Move");
 
+        // Defines New Game button logic
         newButton.addActionListener(e -> game.newGame());
         loadButton.addActionListener(e -> {
+            // Opens file choose to select a save file to load
             JFileChooser chooser = new JFileChooser();
             chooser.setCurrentDirectory(new File("SaveFiles"));
             chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
+            // Once a file is chosen load it using GameController
             int result = chooser.showOpenDialog(this);
             if(result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = chooser.getSelectedFile();
@@ -98,7 +103,9 @@ public class GUI extends JFrame {
                 }
             }
         });
+        // Defines Save Game button logic
         saveButton.addActionListener(e -> {
+            // Creates popup for entering save file name
             JDialog dialog = new JDialog(this, "Save Game", true);
             dialog.setSize(300, 100);
             dialog.setLocationRelativeTo(this);
@@ -109,28 +116,34 @@ public class GUI extends JFrame {
             JTextField text = new JTextField();
             dialog.add(text, BorderLayout.CENTER);
 
+            // Final variable for lambda function
             final String[] fileName = {null};
 
-            text.addActionListener(e2 -> {
+            // Stores file name and closes popup
+            text.addActionListener(e1 -> {
                 fileName[0] = text.getText().trim();
                 dialog.dispose();
             });
 
             dialog.setVisible(true);
 
+            // Saves file under file name using GameController
             try {
                 game.saveGame(fileName[0]);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         });
+        // Defines Undo Move button logic
         undoButton.addActionListener(e -> {
+            // Removes last move from log, undoes board to last move made, and switches turn
             game.gameLog.removeLastMove();
             updateBoardGUI();
             moveHandler.isWhiteTurn = !moveHandler.isWhiteTurn;
             removeLastLogMove();
         });
 
+        // Adds all buttons to side panel
         sidePanel.add(newButton);
         sidePanel.add(loadButton);
         sidePanel.add(saveButton);
@@ -138,7 +151,7 @@ public class GUI extends JFrame {
 
         return sidePanel;
     }
-
+    // Creates log panel which outputs all moves made
     private JScrollPane createLogPanel() {
         logText = new JTextArea();
         logText.setEditable(false);
@@ -147,15 +160,16 @@ public class GUI extends JFrame {
         logPane.setPreferredSize(new Dimension(800, 125));
         return logPane;
     }
-
+    // Helper function that outputs string to log panel text area
     public void outputLog(String text) {
         logText.append(text);
     }
-
+    // Loads all piece icons from Resources folder
     private void loadPieceIcons() {
         String[] colors = {"white", "black"};
         String[] pieces = {"pawn", "knight", "bishop", "rook", "queen", "king"};
 
+        // Loads each icon from directory
         for(String color : colors) {
             for(String piece : pieces) {
                 String path = "Resources/" + color + "_" + piece + ".png";
@@ -163,7 +177,7 @@ public class GUI extends JFrame {
             }
         }
     }
-
+    // Update board GUI to current board state
     public void updateBoardGUI(){
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
@@ -183,20 +197,23 @@ public class GUI extends JFrame {
         boardPanel.revalidate();
         boardPanel.repaint();
     }
-
+    // Removes the last move entry from the log panel
     public void removeLastLogMove(){
+        // Gets all moves from internal log and sets resets log text
         String text = logText.getText();
         logText.setText("");
         if(text.isEmpty()){ return;}
 
+        // Splits the full internal log by newline
         String[] lines = text.split("\n");
         if(lines.length == 0){ return;}
 
+        // Outputs all moves from internal logs except the last move
         for(int i = 0; i < lines.length - 1; i++){
             logText.append(lines[i] + "\n");
         }
     }
-
+    // Creates popup for checkmate when the game ends
     public void checkmatePopup(String winner, JFrame mainFrame) {
         JOptionPane.showMessageDialog(mainFrame, "Checkmate! " + winner + " wins!");
         mainFrame.dispose();

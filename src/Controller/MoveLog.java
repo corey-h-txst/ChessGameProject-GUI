@@ -23,10 +23,10 @@ public class MoveLog {
         // Checks if any moves have been made
         if(moves.isEmpty()) return;
 
-        // Undoes the last move
+        // Creates positions from internal log
         Position from = new Position(Character.getNumericValue(moves.getLast().charAt(0)), Character.getNumericValue(moves.getLast().charAt(1)));
         Position to = new Position(Character.getNumericValue(moves.getLast().charAt(2)), Character.getNumericValue(moves.getLast().charAt(3)));
-
+        // Undoes the last move
         Piece movingPiece = pieceMover.getPieceAt(to);
         pieceMover.setPieceAt(from, movingPiece);
         pieceMover.setPieceAt(to, null);
@@ -43,7 +43,7 @@ public class MoveLog {
                 case 'n' -> new Knight(isWhite);
                 default -> new Pawn(isWhite);
             };
-
+            // Restores taken piece
             pieceMover.setPieceAt(to, piece);
         }
         // Removes move from moves list
@@ -53,23 +53,26 @@ public class MoveLog {
     public void clearLog(){
         moves.clear();
     }
-
     // Creates save state of a game by storing all executed moves (not including undoes)
     public void saveToFile(File file) throws IOException {
         try {
+            // Creates file writer to transcribe all moves from internal log into a .txt file
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             for (String move : moves) {
                 writer.write(move);
                 writer.newLine();
             }
+            // Closes writer
             writer.flush();
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+    // Loads game state from save file
     public void loadFromFile(File file) throws IOException {
         try {
+            // Creates file reader that reads all moves from .txt save file
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = reader.readLine()) != null) {

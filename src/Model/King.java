@@ -12,6 +12,7 @@ public class King extends Piece{
     }
 
     @Override
+    // Return all possible moves for the King piece
     public ArrayList<Position> possibleMoves(ArrayList<ArrayList<Piece>> board, Position pos) {
         ArrayList<Position> possibleMoves = new ArrayList<>();
         int row = pos.row;
