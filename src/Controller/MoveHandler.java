@@ -208,9 +208,8 @@ public class MoveHandler{
             }
         }
         gui.logText.append("Checkmate!\n");
-        String winOutput = (isWhiteTurn) ? "Black wins!\n" : "White wins!\n";
-        gui.logText.append(winOutput);
-        gui.logText.append("Press \"New Game\" or \"Load Game\" to continue playing!\n");
+        String winOutput = (isWhiteTurn) ? "Black" : "White";
+        gui.checkmatePopup(winOutput, gui);
         return true;
     }
 }

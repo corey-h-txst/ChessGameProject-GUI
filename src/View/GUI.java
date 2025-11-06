@@ -5,6 +5,8 @@ import Controller.MoveHandler;
 import Model.*;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -193,5 +195,10 @@ public class GUI extends JFrame {
         for(int i = 0; i < lines.length - 1; i++){
             logText.append(lines[i] + "\n");
         }
+    }
+
+    public void checkmatePopup(String winner, JFrame mainFrame) {
+        JOptionPane.showMessageDialog(mainFrame, "Checkmate! " + winner + " wins!");
+        mainFrame.dispose();
     }
 }
