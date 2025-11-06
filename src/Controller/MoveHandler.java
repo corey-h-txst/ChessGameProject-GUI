@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class MoveHandler{
     private GUI gui;
-    private boolean isWhiteTurn = true;
+    public boolean isWhiteTurn = true;
     private Position selectedPos = null;
     private final boolean white = true;
     private final boolean black = false;
@@ -107,13 +107,13 @@ public class MoveHandler{
         if(moveLog) {
             if (getPieceAt(to) != null) {
                 gui.logText.append(getPieceAt(from).toString() + " " + from.toString() + " takes " + getPieceAt(to).toString() + " " + to.toString() + "\n");
-                String move = ("" + from.col + from.row + to.col + to.row);
+                String move = ("" + from.row + from.col + to.row + to.col);
                 String takenPiece = (getPieceAt(to).isWhite) ? "w" : "b";
                 takenPiece = (takenPiece + getPieceAt(to).toString().charAt(0)).toLowerCase();
                 gui.game.gameLog.addMove(move + takenPiece);
             } else {
                 gui.logText.append(getPieceAt(from).toString() + " " + from.toString() + " to " + to.toString() + "\n");
-                String move = ("" + from.col + from.row + to.col + to.row);
+                String move = ("" + from.row + from.col + to.row + to.col);
                 gui.game.gameLog.addMove(move);
             }
         }

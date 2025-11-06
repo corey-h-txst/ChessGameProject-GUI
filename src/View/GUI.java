@@ -17,7 +17,7 @@ public class GUI extends JFrame {
     private JPanel sidePanel;
     private JScrollPane logPanel;
     public JTextArea logText;
-    public  MoveHandler moveHandler;
+    public MoveHandler moveHandler;
     public GameController game;
     private Map<String, ImageIcon> pieceIcons = new HashMap<String, ImageIcon>();
 
@@ -139,7 +139,12 @@ public class GUI extends JFrame {
                 throw new RuntimeException(ex);
             }
         });
-        undoButton.addActionListener(e -> game.gameLog.removeLastMove());
+        undoButton.addActionListener(e -> {
+            game.gameLog.removeLastMove();
+            updateBoardGUI();
+            moveHandler.isWhiteTurn = !moveHandler.isWhiteTurn;
+            removeLastLogMove();
+        });
 
         sidePanel.add(newButton);
         sidePanel.add(loadButton);
@@ -192,5 +197,18 @@ public class GUI extends JFrame {
         }
         boardPanel.revalidate();
         boardPanel.repaint();
+    }
+
+    public void removeLastLogMove(){
+        String text = logText.getText();
+        logText.setText("");
+        if(text.isEmpty()){ return;}
+
+        String[] lines = text.split("\n");
+        if(lines.length == 0){ return;}
+
+        for(int i = 0; i < lines.length - 1; i++){
+            logText.append(lines[i] + "\n");
+        }
     }
 }

@@ -1,17 +1,16 @@
 package Controller;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 import Model.*;
 
 public class MoveLog {
-    private final List<String> moves;
+    private final LinkedList<String> moves;
     private final MoveHandler pieceMover;
 
     // Default constructor
     public MoveLog(MoveHandler pieceMover) {
-        moves = new ArrayList<String>();
+        moves = new LinkedList<String>();
         this.pieceMover = pieceMover;
     }
 
@@ -21,10 +20,16 @@ public class MoveLog {
     }
     // Removes the last added move from moves list
     public void removeLastMove() {
+        // Checks if any moves have been made
+        if(moves.isEmpty()) return;
+
         // Undoes the last move
         Position from = new Position(Character.getNumericValue(moves.getLast().charAt(0)), Character.getNumericValue(moves.getLast().charAt(1)));
         Position to = new Position(Character.getNumericValue(moves.getLast().charAt(2)), Character.getNumericValue(moves.getLast().charAt(3)));
-        pieceMover.movePiece(to, from, false);
+
+        Piece movingPiece = pieceMover.getPieceAt(to);
+        pieceMover.setPieceAt(from, movingPiece);
+        pieceMover.setPieceAt(to, null);
 
         // Checks if a piece was taken
         if(moves.getLast().length() > 4) {
