@@ -106,8 +106,14 @@ public class MoveHandler{
         if(moveLog) {
             if (getPieceAt(to) != null) {
                 gui.logText.append(getPieceAt(from).toString() + " " + from.toString() + " takes " + getPieceAt(to).toString() + " " + to.toString() + "\n");
+                String move = ("" + from.col + from.row + to.col + to.row);
+                String takenPiece = (getPieceAt(to).isWhite) ? "w" : "b";
+                takenPiece = (takenPiece + getPieceAt(to).toString().charAt(0)).toLowerCase();
+                gui.game.gameLog.addMove(move + takenPiece);
             } else {
                 gui.logText.append(getPieceAt(from).toString() + " " + from.toString() + " to " + to.toString() + "\n");
+                String move = ("" + from.col + from.row + to.col + to.row);
+                gui.game.gameLog.addMove(move);
             }
         }
         Piece piece = getPieceAt(from);

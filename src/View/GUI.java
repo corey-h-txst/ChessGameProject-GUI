@@ -18,11 +18,12 @@ public class GUI extends JFrame {
     private JScrollPane logPanel;
     public JTextArea logText;
     public  MoveHandler moveHandler;
-    private GameController game;
+    public GameController game;
     private Map<String, ImageIcon> pieceIcons = new HashMap<String, ImageIcon>();
 
     public GUI() {
         moveHandler = new MoveHandler(this);
+        game = new GameController(this, moveHandler);
 
         setTitle("Java Chess Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
