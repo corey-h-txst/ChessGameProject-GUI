@@ -88,6 +88,7 @@ public class MoveHandler{
             selectedPos = null;
             gui.updateBoardGUI();
         }
+        isCheckmate(isWhiteTurn);
     }
 
     // Return the piece at any given position
@@ -182,7 +183,7 @@ public class MoveHandler{
         for(int row = 0; row < 8; row++){
             for(int col = 0; col < 8; col++){
                 Piece piece = board.get(row).get(col);
-                if(piece != null && piece.isWhite != isWhite){
+                if(piece != null && piece.isWhite == isWhite){
                     ArrayList<Position> moves = piece.possibleMoves(board, new Position(row, col));
                     for(Position move : moves){
                         // Store current board state
@@ -199,12 +200,17 @@ public class MoveHandler{
                         board.get(move.row).set(move.col, captured);
 
                         if(!stillCheck){
+                            gui.logText.append("Check!\n");
                             return false;
                         }
                     }
                 }
             }
         }
+        gui.logText.append("Checkmate!\n");
+        String winOutput = (isWhiteTurn) ? "Black wins!\n" : "White wins!\n";
+        gui.logText.append(winOutput);
+        gui.logText.append("Press \"New Game\" or \"Load Game\" to continue playing!\n");
         return true;
     }
 }
