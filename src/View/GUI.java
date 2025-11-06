@@ -81,36 +81,19 @@ public class GUI extends JFrame {
 
         newButton.addActionListener(e -> game.newGame());
         loadButton.addActionListener(e -> {
-            File saveDirectory = new File("SaveFiles");
-            File[] files = saveDirectory.listFiles();
+            JFileChooser chooser = new JFileChooser();
+            chooser.setCurrentDirectory(new File("SaveFiles"));
+            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-            final File[] selectedFile = {null};
-
-            JDialog dialog = new JDialog(this, "Load Game", true);
-            dialog.setSize(300, 400);
-            dialog.setLayout(new BorderLayout());
-            dialog.setLocationRelativeTo(this);
-
-            JLabel label = new JLabel("Select a save file:");
-            dialog.add(label, BorderLayout.NORTH);
-
-            JPanel panel = new JPanel();
-            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-            for(File file : files) {
-                JButton button = new JButton(file.getName());
-                button.addActionListener(e1 -> {
-                    selectedFile[0] = file;
-                    dialog.dispose();
-                });
-            }
-
-            dialog.setVisible(true);
-
-            try {
-                game.loadGame(files[0].getName());
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+            int result = chooser.showOpenDialog(this);
+            if(result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = chooser.getSelectedFile();
+                try {
+                    game.loadGame(selectedFile.getName());
+                    updateBoardGUI();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
         saveButton.addActionListener(e -> {

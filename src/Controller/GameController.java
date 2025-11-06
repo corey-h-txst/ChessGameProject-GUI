@@ -26,7 +26,7 @@ public class GameController {
     }
     // Takes a file name from GUI and saves the current log to a file in SaveFiles directory
     public void saveGame(String saveFileName) throws IOException {
-        File saveFile = new File("SaveFiles/" + saveFileName);
+        File saveFile = new File("SaveFiles/" + saveFileName + ".txt");
         gameLog.saveToFile(saveFile);
     }
     // Takes in file name from GUI and loads the selected file by creating a new game and then re-executing all moves from log file

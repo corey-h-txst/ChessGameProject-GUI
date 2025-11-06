@@ -62,6 +62,8 @@ public class MoveLog {
                 writer.write(move);
                 writer.newLine();
             }
+            writer.flush();
+            writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
