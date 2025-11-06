@@ -7,6 +7,11 @@ public class Rook extends Piece{
     public Rook(boolean isWhite) {super(isWhite);}
 
     @Override
+    public String toString() {
+        return "Rook";
+    }
+
+    @Override
     public ArrayList<Position> possibleMoves(ArrayList<ArrayList<Piece>> board, Position pos) {
         ArrayList<Position> possibleMoves = new ArrayList<>();
         int row = pos.row;

@@ -9,6 +9,11 @@ public class Knight extends Piece{
     }
 
     @Override
+    public String toString() {
+        return "Knight";
+    }
+
+    @Override
     public ArrayList<Position> possibleMoves(ArrayList<ArrayList<Piece>> board, Position pos) {
         ArrayList<Position> possibleMoves = new ArrayList<>();
         int row = pos.row;

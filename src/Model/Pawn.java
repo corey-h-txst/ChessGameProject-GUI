@@ -9,6 +9,11 @@ public class Pawn extends Piece{
     }
 
     @Override
+    public String toString() {
+        return "Pawn";
+    }
+
+    @Override
     public ArrayList<Position> possibleMoves(ArrayList<ArrayList<Piece>> board, Position pos){
         ArrayList<Position> possibleMoves = new ArrayList<>();
         // Determines direction of pawn (white upwards, black downwards)

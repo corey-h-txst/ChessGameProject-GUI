@@ -24,7 +24,7 @@ public class MoveLog {
         // Undoes the last move
         Position from = new Position(Character.getNumericValue(moves.getLast().charAt(0)), Character.getNumericValue(moves.getLast().charAt(1)));
         Position to = new Position(Character.getNumericValue(moves.getLast().charAt(2)), Character.getNumericValue(moves.getLast().charAt(3)));
-        pieceMover.movePiece(to, from);
+        pieceMover.movePiece(to, from, false);
 
         // Checks if a piece was taken
         if(moves.getLast().length() > 4) {
@@ -71,7 +71,7 @@ public class MoveLog {
                 // Executes move from log on chess board
                 Position from = new Position(Character.getNumericValue(line.charAt(0)), Character.getNumericValue(line.charAt(1)));
                 Position to = new Position(Character.getNumericValue(line.charAt(2)), Character.getNumericValue(line.charAt(3)));
-                pieceMover.movePiece(from, to);
+                pieceMover.movePiece(from, to, true);
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);

@@ -3,7 +3,6 @@ package Controller;
 import Model.*;
 import View.GUI;
 
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class MoveHandler{
@@ -83,7 +82,7 @@ public class MoveHandler{
         }
         else {
             if(testValidMove(selectedPos, clicked)) {
-                movePiece(selectedPos, clicked);
+                movePiece(selectedPos, clicked, true);
                 isWhiteTurn = !isWhiteTurn;
             }
             selectedPos = null;
@@ -103,7 +102,14 @@ public class MoveHandler{
     }
 
     // Moves piece to target and sets original position to null
-    public void movePiece(Position from, Position to){
+    public void movePiece(Position from, Position to, boolean moveLog){
+        if(moveLog) {
+            if (getPieceAt(to) != null) {
+                gui.logText.append(getPieceAt(from).toString() + " " + from.toString() + " takes " + getPieceAt(to).toString() + " " + to.toString() + "\n");
+            } else {
+                gui.logText.append(getPieceAt(from).toString() + " " + from.toString() + " to " + to.toString() + "\n");
+            }
+        }
         Piece piece = getPieceAt(from);
         board.get(from.row).set(from.col, null);
         board.get(to.row).set(to.col, piece);
@@ -117,7 +123,7 @@ public class MoveHandler{
         for (Position move : piece.possibleMoves(board, curr)) {
             Piece captured = getPieceAt(move);
 
-            movePiece(curr, move);
+            movePiece(curr, move, false);
 
             if (!isCheck(piece.isWhite)) {
                 legalMoves.add(move);
@@ -177,7 +183,7 @@ public class MoveHandler{
                         Piece captured = getPieceAt(move);
 
                         // Make move
-                        movePiece(new Position(row, col), move);
+                        movePiece(new Position(row, col), move, false);
 
                         // Check if king is still in check
                         boolean stillCheck = isCheck(isWhite);
