@@ -33,7 +33,7 @@ public class MoveHandler{
         board.set(0, createKingRow(black));
         board.set(1, createPawnRow(black));
         for(int i = 2; i < 6; i++){
-            board.set(0, createEmptyRow());
+            board.set(i, createEmptyRow());
         }
         board.set(6, createPawnRow(white));
         board.set(7, createKingRow(white));
