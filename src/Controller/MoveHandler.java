@@ -9,8 +9,6 @@ public class MoveHandler{
     private GUI gui;
     public boolean isWhiteTurn = true;
     private Position selectedPos = null;
-    private final boolean white = true;
-    private final boolean black = false;
     private final ArrayList<ArrayList<Piece>> board;
 
     // Default constructor
@@ -19,25 +17,25 @@ public class MoveHandler{
         this.board = new ArrayList<>();
 
         // Creates king and pawn rows for black
-        board.add(createKingRow(black));
-        board.add(createPawnRow(black));
+        board.add(createKingRow(false));
+        board.add(createPawnRow(false));
         // Adds empty rows
         for(int i = 0; i < 4; i++){
             board.add(createEmptyRow());
         }
         // Creates king and pawn rows for white
-        board.add(createPawnRow(white));
-        board.add(createKingRow(white));
+        board.add(createPawnRow(true));
+        board.add(createKingRow(true));
     }
     // Sets current board to a blank new board
     public void resetBoard(){
-        board.set(0, createKingRow(black));
-        board.set(1, createPawnRow(black));
+        board.set(0, createKingRow(false));
+        board.set(1, createPawnRow(false));
         for(int i = 2; i < 6; i++){
             board.set(i, createEmptyRow());
         }
-        board.set(6, createPawnRow(white));
-        board.set(7, createKingRow(white));
+        board.set(6, createPawnRow(true));
+        board.set(7, createKingRow(true));
     }
     // Helper function used to create a row of pawns of a given color
     private ArrayList<Piece> createPawnRow(boolean color){
@@ -132,7 +130,7 @@ public class MoveHandler{
 
     }
     // Tests if move is legal (doesn't lead to checkmate)
-    boolean testValidMove(Position curr, Position next) {
+    private boolean testValidMove(Position curr, Position next) {
         Piece piece = getPieceAt(curr);
         ArrayList<Position> legalMoves = new ArrayList<>();
 
@@ -154,7 +152,7 @@ public class MoveHandler{
         return false;
     }
     // Determines if a passed color is in check
-    public boolean isCheck(boolean isWhite) {
+    private boolean isCheck(boolean isWhite) {
         Position kingSquare = null;
         // Finds location of king
         for(int row = 0; row < 8; row++){
@@ -184,7 +182,7 @@ public class MoveHandler{
         return false;
     }
     // Determines if a passed color is in checkmate
-    public boolean isCheckmate(boolean isWhite) {
+    private boolean isCheckmate(boolean isWhite) {
         if (!isCheck(isWhite)) {
             return false;
         }
