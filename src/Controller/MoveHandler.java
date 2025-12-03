@@ -85,7 +85,6 @@ public class MoveHandler{
             if(testValidMove(selectedPos, clicked)) {
                 // Moves piece and switches turns
                 movePiece(selectedPos, clicked, true);
-                isWhiteTurn = !isWhiteTurn;
             }
             // Resets selectedPos and updates board in GUI
             selectedPos = null;
@@ -122,12 +121,12 @@ public class MoveHandler{
                 String move = ("" + from.row + from.col + to.row + to.col);
                 gui.game.gameLog.addMove(move);
             }
+            isWhiteTurn = !isWhiteTurn;
         }
         // Executes move
         Piece piece = getPieceAt(from);
         board.get(from.row).set(from.col, null);
         board.get(to.row).set(to.col, piece);
-
     }
     // Tests if move is legal (doesn't lead to checkmate)
     private boolean testValidMove(Position curr, Position next) {
